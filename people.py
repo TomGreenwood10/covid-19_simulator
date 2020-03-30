@@ -42,4 +42,7 @@ class NormalPerson(Person):
 
     def move(self):
         if not self.dead:
-            self.pos += (np.random.rand(2) - 0.5) * 2
+            if self.ill:
+                self.pos += (np.random.rand(2) * 0.2)
+            else:
+                self.pos += (np.random.rand(2) - 0.5) * 2
