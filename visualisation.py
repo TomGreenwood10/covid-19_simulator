@@ -31,6 +31,7 @@ def plot_scene(scene, time):
 def plot_scene2(scene, time):
     dead = []
     infected = []
+    ill = []
     recovered = []
     not_infected = []
     plt.figure(figsize=(8, 8))
@@ -38,7 +39,10 @@ def plot_scene2(scene, time):
         if person.dead:
             dead.append(person.pos)
         elif person.infected:
-            infected.append(person.pos)
+            if person.ill:
+                ill.append(person.pos)
+            else:
+                infected.append(person.pos)
         elif person.recovered:
             recovered.append(person.pos)
         else:
@@ -50,6 +54,9 @@ def plot_scene2(scene, time):
     if len(infected) > 0:
         infected = np.array(infected)
         plt.scatter(infected[:, 0], infected[:, 1], c='r', s=20)
+    if len(ill) > 0:
+        ill = np.array(ill)
+        plt.scatter(ill[:, 0], ill[:, 1], c='purple', s=20)
     if len(recovered) > 0:
         recovered = np.array(recovered)
         plt.scatter(recovered[:, 0], recovered[:, 1], c='g', s=20)
