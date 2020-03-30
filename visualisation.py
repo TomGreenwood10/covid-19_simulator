@@ -6,35 +6,13 @@ import simulation
 
 
 @gif.frame
-def plot_scene(scene, time):
-    plt.figure(figsize=(8, 8))
-    for person in scene.people:
-        markertype = 'o'
-        markercol = 'k'
-        markersize = 10
-        if person.dead:
-            markertype = 'x'
-            markersize = 20
-        if person.infected:
-            markercol = 'red'
-            markersize = 20
-        elif person.recovered:
-            markercol = 'green'
-
-        plt.scatter(person.pos[0], person.pos[1], marker=markertype, c=markercol, s=markersize)
-    plt.axis('equal')
-    plt.xlim(-30, 130)
-    plt.ylim(-30, 130)
-
-
-@gif.frame
-def plot_scene2(scene, time):
+def plot_scene(scene, time, figsize=(8, 8)):
     dead = []
     infected = []
     ill = []
     recovered = []
     not_infected = []
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=figsize)
     for person in scene.people:
         if person.dead:
             dead.append(person.pos)

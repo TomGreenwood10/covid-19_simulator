@@ -83,7 +83,7 @@ class Scene:
         ])
 
 
-def run(n_people, n_infected, total_time, create_gif=False, plot_func=2):
+def run(n_people, n_infected, total_time, create_gif=False, figsize=(8, 8)):
     if create_gif:
         frames = []
 
@@ -92,10 +92,7 @@ def run(n_people, n_infected, total_time, create_gif=False, plot_func=2):
         scene.update(time)
         scene.log()
         if create_gif:
-            if plot_func == 1:
-                frames.append(visualisation.plot_scene(scene, time))
-            if plot_func == 2:
-                frames.append(visualisation.plot_scene2(scene, time))
+            frames.append(visualisation.plot_scene(scene, time, figsize))
     scene.df.reset_index(drop=True, inplace=True)
     if create_gif:
         return scene, frames
