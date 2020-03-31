@@ -7,7 +7,12 @@ import numpy as np
 
 class Person:
 
-    def __init__(self, pos, infected=False, ill=False, recovered=False, death_probability=0.1):
+    def __init__(self,
+                 pos,
+                 infected=False,
+                 ill=False,
+                 recovered=False,
+                 death_probability=0.1):
         self.pos_initial = pos
         self.pos = pos
         self.infected = infected
@@ -43,6 +48,11 @@ class NormalPerson(Person):
     def move(self):
         if not self.dead:
             if self.ill:
-                self.pos += (np.random.rand(2) * 0.2)
+                self.pos += (np.random.rand(2) - 0.5)
             else:
                 self.pos += (np.random.rand(2) - 0.5) * 2
+                # self.pos -= 2 * vec_from_initial_pos
+
+            # Introduce small tendency to move back to initial position to keep from drifting
+            vec_from_initial_pos = self.pos - self.pos_initial
+            self.pos -= 2 * vec_from_initial_pos
