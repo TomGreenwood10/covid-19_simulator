@@ -45,8 +45,8 @@ def plot_scene(scene, time, figsize=(8, 8)):
     ax = plt.gca()
     plt.text(0, 1.01, f'frame = {time}', transform=ax.transAxes)
     plt.axis('equal')
-    plt.xlim(-30, 130)
-    plt.ylim(-30, 130)
+    plt.xlim(-scene.size * 0.1, scene.size * 1.1)
+    plt.ylim(-scene.size * 0.1, scene.size * 1.1)
 
 
 def create_gif(n_people, n_infected, total_time, scene=None, save_loc='gifs/'):
