@@ -56,3 +56,16 @@ class NormalPerson(Person):
             # Introduce small tendency to move back to initial position to keep from drifting
             vec_from_initial_pos = self.pos - self.pos_initial
             self.pos -= 2 * vec_from_initial_pos
+
+
+class SuperSpreader(Person):
+
+    def move(self):
+        if not self.dead:
+            if self.ill:
+                self.pos += (np.random.rand(2) - 0.5) * 2
+            else:
+                self.pos += (np.random.rand(2) - 0.5) * 10
+
+            vec_from_initial_pos = self.pos - self.pos_initial
+            self.pos -= 10 * vec_from_initial_pos
