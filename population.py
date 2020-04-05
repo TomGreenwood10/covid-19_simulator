@@ -5,6 +5,24 @@ Module containing people classes
 import numpy as np
 
 
+class Country:
+
+    def __init__(self):
+        self.population = None
+        self.cities = []
+        self.n_cities = None
+        self.city_scale = 200
+        self.city_populations = np.random.exponential(self.city_scale, self.n_cities).astype(int)
+
+
+class City:
+
+    def __init__(self, pos):
+        self.pos = pos
+        self.residents = []
+        self.physical_size = None
+
+
 class Person:
 
     def __init__(self,
