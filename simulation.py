@@ -4,97 +4,64 @@ Module for running / handing simulation
 
 import numpy as np
 import pandas as pd
+import gif
 
 import visualisation
-from people import NormalPerson
+from population import Country
 
 
-class Scene:
-    """
-    Class for scene to contain people with coordinates.
-    """
-    def __init__(self, n_people, n_infected=0):
-        self.people = []
-        self.n_people = n_people
-        self.n_infected = n_infected
-        self.n_not_infected = n_people - n_infected
-        self.n_recovered = 0
-        self.n_dead = 0
-        self.size = 100
-        self.infection_distance = 0.5
-        for i in range(self.n_not_infected):
-            self.people.append(
-                NormalPerson(
-                    pos=np.random.rand(2) * self.size,
-                    infected=False
-                )
-            )
-        for i in range(self.n_infected):
-            self.people.append(
-                NormalPerson(
-                    pos=np.random.rand(2) * self.size,
-                    infected=True
-                )
-            )
-        self.df = pd.DataFrame(
-            [[len(self.people), self.n_not_infected, self.n_infected, self.n_recovered, self.n_dead]],
-            columns=['n_total', 'n_not_infected', 'n_infected', 'n_recovered', 'n_dead']
-        )
+def run(n_infected,
+        total_time,
+        super_spreader_proportion=0.05,
+        infection_distance=0.5,
+        infection_probability=0.1,
+        return_gif_frames=False,
+        figsize=(8, 8)):
 
-    def update(self, time):
-        for person in self.people:
-            person.move()
-        for person in self.people:
-            if person.infected:
-                for other_person in self.people:
-                    if other_person is not person:
-                        if np.linalg.norm(person.pos - other_person.pos) < self.infection_distance:
-                            other_person.infect(time)
-            person.update(time)
-        self.update_counts()
-
-    def update_counts(self):
-        n_infected = 0
-        n_not_infected = 0
-        n_recovered = 0
-        n_dead = 0
-        for person in self.people:
-            if person.dead:
-                n_dead += 1
-                continue
-            if person.infected:
-                n_infected += 1
-            elif person.recovered:
-                n_recovered += 1
-            else:
-                n_not_infected += 1
-        self.n_infected = n_infected
-        self.n_not_infected = n_not_infected
-        self.n_recovered = n_recovered
-        self.n_dead = n_dead
-
-    def log(self):
-        self.df = pd.concat([
-            self.df,
-            pd.DataFrame(
-                [[len(self.people), self.n_not_infected, self.n_infected, self.n_recovered, self.n_dead]],
-                columns=['n_total', 'n_not_infected', 'n_infected', 'n_recovered', 'n_dead']
-            )
-        ])
-
-
-def run(n_people, n_infected, total_time, create_gif=False, figsize=(8, 8)):
-    if create_gif:
+    df = pd.DataFrame(columns=['n_total', 'n_not_infected', 'n_infected', 'n_recovered', 'n_dead'])
+    if return_gif_frames:
         frames = []
 
-    scene = Scene(n_people=n_people, n_infected=n_infected)
+    # Initiate country and infections
+    country = Country(super_spreader_proportion)
+    i = 0
+    while i < n_infected:
+        infection_initiated = False
+        while not infection_initiated:
+            city = np.random.choice(country.cities)
+            patient_zero = np.random.choice(city.residents)
+            if not patient_zero.infected:
+                patient_zero.infect(0)
+                infection_initiated = True
+        i += 1
+
+    # Run simulation
     for time in range(total_time):
-        scene.update(time)
-        scene.log()
-        if create_gif:
-            frames.append(visualisation.plot_scene(scene, time, figsize))
-    scene.df.reset_index(drop=True, inplace=True)
-    if create_gif:
-        return scene, frames
+        country.update(time, infection_distance, infection_probability)
+        df = log(
+            df,
+            country.population,
+            country.n_not_infected,
+            country.n_infected,
+            country.n_recovered,
+            country.n_dead
+        )
+        if return_gif_frames:
+            frames.append(visualisation.plot(country, time, figsize))
+
+    if return_gif_frames:
+        return country, df, frames
     else:
-        return scene
+        return country, df
+
+
+def log(df, population, n_not_infected, n_infected, n_recovered, n_dead):
+    df = pd.concat([
+        df,
+        pd.DataFrame(
+            [[population, n_not_infected, n_infected, n_recovered, n_dead]],
+            columns=['n_total', 'n_not_infected', 'n_infected', 'n_recovered', 'n_dead']
+        )
+    ])
+    df.reset_index(drop=True, inplace=True)
+    return df
