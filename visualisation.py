@@ -6,7 +6,7 @@ import simulation
 
 
 @gif.frame
-def plot(country, time, figsize=(8, 8), xlim=(-150, 150), ylim=(-150, 150)):
+def plot(country, time, figsize=(8, 8), xlim=(-125, 125), ylim=(-125, 125)):
     dead = []
     infected = []
     ill = []
