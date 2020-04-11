@@ -10,7 +10,7 @@ class Country:
     def __init__(self,
                  super_spreader_proportion=0.05,
                  n_cities=10,
-                 city_scale=100):
+                 city_scale=200):
         self.n_cities = n_cities
         self.city_scale = city_scale
         self.city_populations = np.random.exponential(self.city_scale, self.n_cities).astype(int)
@@ -147,7 +147,7 @@ class Person:
 
 class NormalPerson(Person):
     # Move scalar and adjustment / fudge for proximity.  Could look at altering population layout instead
-    def move(self, move_scalar=0.1):
+    def move(self, move_scalar=0.05):
         if not self.dead:
             if self.ill:
                 self.pos += (np.random.rand(2) - 0.5) * move_scalar
