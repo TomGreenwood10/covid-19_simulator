@@ -4,7 +4,6 @@ Module for running / handing simulation
 
 import numpy as np
 import pandas as pd
-import gif
 
 import visualisation
 from population import Country
@@ -34,6 +33,7 @@ def run(n_infected,
                 patient_zero.infect(0)
                 infection_initiated = True
         i += 1
+    df = log(df, country.population, country.n_not_infected, country.n_infected, country.n_recovered, country.n_dead)
 
     # Run simulation
     for time in range(total_time):
@@ -47,7 +47,10 @@ def run(n_infected,
             country.n_dead
         )
         if return_gif_frames:
-            frames.append(visualisation.plot(country, time, figsize))
+            if total_time < 100:
+                frames.append(visualisation.plot(country, time, figsize))
+            elif int(time % (total_time / 100)) == 0:
+                frames.append(visualisation.plot(country, time, figsize))
 
     if return_gif_frames:
         return country, df, frames
