@@ -1,7 +1,7 @@
 # covid-19_simulator
 
 ## Overview
-Simulator that moves people object around and transfers infections.
+Simulator that moves people objects around and transfers infections.
 
 __NB: This has not been written by someone with medical knowlege or any previous experience in infection simulations. The coefficients and mechanisms have not been arrived at via a sound scientific method__. I just wanted to write a framework during the current covid-19 crisis. If some of the code is useful then feel free to use.
 
@@ -18,4 +18,4 @@ The simulation module is used to run simulations and the visualisation module to
 
 ## How to use
 1. Import the simulation module.
-1. Run the simulation with the `simulation.run()` which will return the country in it's final state, a pandas dataframe with simulation infection information and if `return_gif_frames` is set to True then also frames (matplotlib plots) that can be saved as a git with the gif package (`pip install gif`).
+1. Run the simulation with the `simulation.run()` which will return the country in it's final state, a pandas dataframe with simulation infection information and if `return_gif_frames=True` then also frames (matplotlib plots) that can be saved as a gif with the gif package (`pip install gif`).
